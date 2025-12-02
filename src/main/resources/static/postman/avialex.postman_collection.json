@@ -1,0 +1,204 @@
+{
+  "info": {
+    "name": "Avialex API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Sign Up",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/signup",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth","signup"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Alice\",\n  \"address\": \"Street 1\",\n  \"email\": \"alice@example.com\",\n  \"phone\": \"123456\",\n  \"password\": \"Passw0rd!\",\n  \"cpf\": \"00000000000\",\n  \"rg\": \"000000\",\n  \"type\": \"CLIENT\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Auth - Sign In",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/signin",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth","signin"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"Passw0rd!\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('accessToken', json.accessToken);",
+              "pm.collectionVariables.set('refreshToken', json.refreshToken);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth - Me",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth","me"] }
+      }
+    },
+    {
+      "name": "Auth - Signout Revoke",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/auth/signout/revoke", "host": ["{{baseUrl}}"], "path": ["auth","signout","revoke"] },
+        "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" }
+      }
+    },
+    {
+      "name": "Auth - Refresh",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/refresh",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth","refresh"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "User - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/user",
+          "host": ["{{baseUrl}}"],
+          "path": ["user"]
+        }
+      }
+    },
+    {
+      "name": "User - Create (ADMIN)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/user", "host": ["{{baseUrl}}"], "path": ["user"] },
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Bob\",\n  \"address\": \"Street 2\",\n  \"email\": \"bob@example.com\",\n  \"phone\": \"987654\",\n  \"password\": \"Passw0rd!\",\n  \"cpf\": \"11111111111\",\n  \"rg\": \"111111\",\n  \"type\": \"CLIENT\"\n}" }
+      }
+    },
+    {
+      "name": "User - Get By Id",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{accessToken}}" } ],
+        "url": { "raw": "{{baseUrl}}/user/{{userId}}", "host": ["{{baseUrl}}"], "path": ["user","{{userId}}"] }
+      }
+    },
+    {
+      "name": "User - Update (STAFF/ADMIN)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/user/{{userId}}", "host": ["{{baseUrl}}"], "path": ["user","{{userId}}"] },
+        "body": { "mode": "raw", "raw": "{\n  \"address\": \"New Address\"\n}" }
+      }
+    },
+    {
+      "name": "User - Delete (ADMIN)",
+      "request": {
+        "method": "DELETE",
+        "header": [ { "key": "Authorization", "value": "Bearer {{accessToken}}" } ],
+        "url": { "raw": "{{baseUrl}}/user/{{userId}}", "host": ["{{baseUrl}}"], "path": ["user","{{userId}}"] }
+      }
+    },
+    {
+      "name": "Process - Create (ADMIN)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/process", "host": ["{{baseUrl}}"], "path": ["process"] },
+        "body": { "mode": "raw", "raw": "{\n  \"id\": null\n}" }
+      }
+    },
+    {
+      "name": "Process - Get By Id",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{accessToken}}" } ],
+        "url": { "raw": "{{baseUrl}}/process/{{processId}}", "host": ["{{baseUrl}}"], "path": ["process","{{processId}}"] }
+      }
+    },
+    {
+      "name": "Process - Update (ADMIN)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/process/{{processId}}", "host": ["{{baseUrl}}"], "path": ["process","{{processId}}"] },
+        "body": { "mode": "raw", "raw": "{\n  \"id\": {{processId}}\n}" }
+      }
+    },
+    {
+      "name": "Process - Update Status (ADMIN)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": { "raw": "{{baseUrl}}/process/{{processId}}/status", "host": ["{{baseUrl}}"], "path": ["process","{{processId}}","status"] },
+        "body": { "mode": "raw", "raw": "\"OPEN\"" }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" },
+    { "key": "userId", "value": "1" },
+    { "key": "processId", "value": "1" }
+  ]
+}
+
+
