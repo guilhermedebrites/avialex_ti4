@@ -18,7 +18,8 @@ public class CorsConfig {
         
         // Permite o frontend em desenvolvimento e produção
         configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:3000"
+            "http://localhost:3000",
+            "https://avialex-front-ti4.vercel.app"
         ));
         
         // Métodos HTTP permitidos
