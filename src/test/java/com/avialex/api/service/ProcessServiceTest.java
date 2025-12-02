@@ -26,8 +26,8 @@ class ProcessServiceTest {
     @Mock
     private ProcessRepository processRepository;
 
-    @Mock
-    private EmailService emailService;
+//    @Mock
+//    private EmailService emailService;
 
     @InjectMocks
     private ProcessService processService;
@@ -118,9 +118,9 @@ class ProcessServiceTest {
         assertNotNull(result);
         verify(processRepository, times(1)).findById(1L);
         verify(processRepository, times(1)).save(any(Process.class));
-        verify(emailService, times(1)).notifyClientOfProcessStatusChange(
-            anyString(), anyInt(), any(ProcessStatus.class), any(ProcessStatus.class)
-        );
+//        verify(emailService, times(1)).notifyClientOfProcessStatusChange(
+//            anyString(), anyInt(), any(ProcessStatus.class), any(ProcessStatus.class)
+//        );
     }
 
     @Test
@@ -151,9 +151,9 @@ class ProcessServiceTest {
         assertNotNull(result);
         verify(processRepository, times(1)).findById(1L);
         verify(processRepository, times(1)).save(any(Process.class));
-        verify(emailService, times(1)).notifyClientOfProcessStatusChange(
-            anyString(), anyInt(), any(ProcessStatus.class), any(ProcessStatus.class)
-        );
+//        verify(emailService, times(1)).notifyClientOfProcessStatusChange(
+//            anyString(), anyInt(), any(ProcessStatus.class), any(ProcessStatus.class)
+//        );
     }
 
     @Test

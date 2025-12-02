@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 @Service
 public class ProcessService {
     private final ProcessRepository processRepository;
-    private final EmailService emailService;
+//    private final EmailService emailService;
 
     @Autowired
-    public ProcessService(ProcessRepository processRepository, EmailService emailService) {
+    public ProcessService(ProcessRepository processRepository) {
         this.processRepository = processRepository;
-        this.emailService = emailService;
+//        this.emailService = emailService;
     }
 
     public java.util.Optional<Process> getByProcessNumber(Integer processNumber) {
@@ -72,9 +72,9 @@ public class ProcessService {
             process.setWon(updated.getWon());
         }
         Process returnProcess = processRepository.save(process);
-        if (statusChanged && returnProcess.getClientId() != null && returnProcess.getClientId().getEmail() != null) {
-            emailService.notifyClientOfProcessStatusChange(returnProcess.getClientId().getEmail(), returnProcess.getProcessNumber(), oldStatus, returnProcess.getStatus());
-        }
+//        if (statusChanged && returnProcess.getClientId() != null && returnProcess.getClientId().getEmail() != null) {
+//            emailService.notifyClientOfProcessStatusChange(returnProcess.getClientId().getEmail(), returnProcess.getProcessNumber(), oldStatus, returnProcess.getStatus());
+//        }
         return returnProcess;
     }
 
@@ -104,9 +104,9 @@ public class ProcessService {
 
         Process saved = processRepository.save(process);
 
-        if (statusChanged && saved.getClientId() != null && saved.getClientId().getEmail() != null) {
-            emailService.notifyClientOfProcessStatusChange(saved.getClientId().getEmail(), saved.getProcessNumber(), oldStatus, saved.getStatus());
-        }
+//        if (statusChanged && saved.getClientId() != null && saved.getClientId().getEmail() != null) {
+//            emailService.notifyClientOfProcessStatusChange(saved.getClientId().getEmail(), saved.getProcessNumber(), oldStatus, saved.getStatus());
+//        }
 
         return saved;
     }
