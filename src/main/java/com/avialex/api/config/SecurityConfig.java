@@ -20,6 +20,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.core.env.Environment;
 
 @Configuration
 @EnableWebSecurity
@@ -32,13 +34,17 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final AuthService authService;
     private final boolean oauthClientAvailable;
+    private final AuthenticationSuccessHandler oauthSuccessHandler;
+    private final Environment environment;
 
-    public SecurityConfig(@Lazy UserRepository userRepository, @Lazy AuthService authService, JwtConfig jwtConfig, CorsConfigurationSource corsConfigurationSource, ObjectProvider<ClientRegistrationRepository> clientRegistrationRepositoryProvider) {
+    public SecurityConfig(@Lazy UserRepository userRepository, @Lazy AuthService authService, JwtConfig jwtConfig, CorsConfigurationSource corsConfigurationSource, ObjectProvider<ClientRegistrationRepository> clientRegistrationRepositoryProvider, Environment environment) {
         this.userRepository = userRepository;
         this.authService = authService;
         this.jwtConfig = jwtConfig;
         this.corsConfigurationSource = corsConfigurationSource;
         this.oauthClientAvailable = clientRegistrationRepositoryProvider.getIfAvailable() != null;
+        this.environment = environment;
+        this.oauthSuccessHandler = new GithubOAuth2SuccessHandler(userRepository, authService, environment);
     }
 
     @Bean
@@ -59,7 +65,11 @@ public class SecurityConfig {
                     .jwtAuthenticationConverter(jwtAuthenticationConverter())
                 )
             )
-//            .oauth2Login(oauth2 -> { if (oauthClientAvailable) { oauth2.successHandler(new GithubOAuth2SuccessHandler(userRepository, authService)); } })
+            .oauth2Login(oauth2 -> {
+                if (oauthClientAvailable) {
+                    oauth2.successHandler(oauthSuccessHandler);
+                }
+            })
             .logout(logout -> logout.logoutUrl("/auth/signout").logoutSuccessHandler((req, res, auth) -> res.setStatus(200)));
         return http.build();
     }
