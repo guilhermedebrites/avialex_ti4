@@ -13,11 +13,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/auth")
@@ -52,6 +56,11 @@ public class AuthController {
     @PostMapping("/signout")
     public ResponseEntity<Void> signout() {
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/oauth2/google")
+    public void redirectToGoogleOAuth(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/oauth2/authorization/google");
     }
 
     @PostMapping("/forgot-password")
